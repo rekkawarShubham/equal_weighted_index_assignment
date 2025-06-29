@@ -17,12 +17,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from data.database import get_db_connection, initialize_db
 
 # --- Configuration & Ticker List ---
-TICKERS_TO_INGEST = [
-    "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA", "JPM", "V", "UNH"
-]
+# TICKERS_TO_INGEST = [
+#     "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA", "JPM", "V", "UNH"
+# ]
 
-# TICKERS_TO_INGEST = pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")[0]["Symbol"].tolist()
-print(TICKERS_TO_INGEST)
+TICKERS_TO_INGEST = pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")[0]["Symbol"].tolist()
+TICKERS_TO_INGEST = TICKERS_TO_INGEST[:200]
+print("Fetching data for : ",len(TICKERS_TO_INGEST))
 DAYS_HISTORY = 45
 
 

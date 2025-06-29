@@ -62,4 +62,10 @@ def build_index(start_date: str = Query(...), end_date: str = Query(None)):
 
     # Cache results
     r.set(f"index_perf:{start_date}:{end_date}", perf_df.to_json(orient="records"))
+
+    # Cache daily compositions
+    for day in compositions_df["trade_date"].unique():
+        day_df = compositions_df[compositions_df["trade_date"] == day][["ticker", "weight"]]
+        r.set(f"composition:{day}", day_df.to_json(orient="records"))
+
     return {"message": f"Index built for {start_date} to {end_date}"}

@@ -1,4 +1,4 @@
 import redis
 r = redis.Redis(host="localhost", port=6379)
-cached = r.get("index_perf:2024-05-01:2024-06-15")
+cached = r.get("index_perf:2025-05-14:2025-06-14")
 print(cached)

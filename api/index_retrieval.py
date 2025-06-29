@@ -57,9 +57,53 @@ def get_index_composition(date: str = Query(...)):
     if df.empty:
         return {"message": f"No composition data found for {date}"}
 
-    # Cache and return
+    # Cache and return , also we can set expiry here if needed , ex =3600 (1hour)
     r.set(cache_key, df.to_json(orient="records"))
     return {
         "source": "db",
         "data": df.to_dict(orient="records")
     }
+
+@router.get("/composition-changes")
+def get_composition_changes(start_date: str = Query(...), end_date: str = Query(...)):
+    con = duckdb.connect(DB_PATH)
+
+    # Load all compositions in date range
+    df = con.execute(f"""
+        SELECT date, ticker
+        FROM index_composition
+        WHERE date BETWEEN '{start_date}' AND '{end_date}'
+        ORDER BY date, ticker
+    """).fetchdf()
+
+    con.close()
+
+    if df.empty:
+        return {"message": "No data in range"}
+
+    # Group tickers by date
+    grouped = df.groupby("date")["ticker"].apply(set).sort_index()
+
+    changes = []
+    prev_date = None
+    prev_tickers = set()
+
+    for curr_date, curr_tickers in grouped.items():
+        if prev_date is None:
+            prev_date = curr_date
+            prev_tickers = curr_tickers
+            continue
+
+        entered = sorted(list(curr_tickers - prev_tickers))
+        exited = sorted(list(prev_tickers - curr_tickers))
+
+        if entered or exited:
+            changes.append({
+                "date": str(curr_date),
+                "entered": entered,
+                "exited": exited
+            })
+
+        prev_tickers = curr_tickers
+
+    return {"changes": changes}

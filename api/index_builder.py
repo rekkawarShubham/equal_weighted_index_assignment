@@ -5,7 +5,7 @@ import pandas as pd
 from redis import Redis
 
 router = APIRouter()
-DB_PATH = "services/services/index_data.duckdb"
+DB_PATH = "services/data/index_data.duckdb"
 r = Redis(host="redis", port=6379)
 
 @router.post("/build-index")

@@ -33,7 +33,7 @@ def get_index_performance(start_date: str = Query(...), end_date: str = Query(..
     if df.empty:
         return {"message": "No index services found for given date range"}
 
-    r.set(cache_key, df.to_json(orient="records"))
+    r.set(cache_key, df.to_json(orient="records"), ex=86400)
     return {"source": "db", "services": df.to_dict(orient="records")}
 
 @router.get("/index-composition")
@@ -59,7 +59,7 @@ def get_index_composition(date: str = Query(...)):
         return {"message": f"No composition services found for {date}"}
 
     # Cache and return , also we can set expiry here if needed , ex =3600 (1hour)
-    r.set(cache_key, df.to_json(orient="records"))
+    r.set(cache_key, df.to_json(orient="records"),ex=86400)
     return {
         "source": "db",
         "services": df.to_dict(orient="records")
@@ -113,5 +113,6 @@ def get_composition_changes(start_date: str = Query(...), end_date: str = Query(
 
         prev_tickers = curr_tickers
 
-    r.set(cache_key, json.dumps(changes))
+    # adding ex=86400 avoids stale data in cache
+    r.set(cache_key, json.dumps(changes),ex=86400)
     return {"source": "db" , "changes": changes}

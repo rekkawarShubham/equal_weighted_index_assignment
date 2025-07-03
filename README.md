@@ -44,23 +44,23 @@ Access API at: http://localhost:8000/docs
 
 ### Daily data ingestion job
 
-    RUN : python data/data_ingestion_job.py
+    RUN : python services/data_ingestion_job.py
 
 ## Build Index
     POST /build-index?start_date=2025-05-15&end_date=2025-07-02
 
 ## API Usage
     API : /index-performance
-    GET /index-performance?start_date=2024-05-01&end_date=2024-06-01
+    GET /index-performance?start_date=2025-05-15&end_date=2024-06-30
     
     API : /index-composition
-    GET /index-composition?date=2024-05-15
+    GET /index-composition?date=2025-05-15
     
     API : /composition-changes
-    GET /composition-changes?start_date=2024-05-01&end_date=2024-06-01
+    GET /composition-changes?start_date=2025-05-15&end_date=2024-06-30
     
     API : /export-data
-    POST /export-data?start_date=2024-05-01&end_date=2024-06-01
+    POST /export-data?start_date=2025-05-15&end_date=2025-06-30
     Returns .xlsx file with:
 
 ## 🗄️ Database Schema (DuckDB)

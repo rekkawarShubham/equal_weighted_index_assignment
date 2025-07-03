@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Query
-from datetime import datetime
 import duckdb
 import pandas as pd
 from redis import Redis
@@ -10,6 +9,24 @@ r = Redis(host="redis", port=6379)
 
 @router.post("/build-index")
 def build_index(start_date: str = Query(...), end_date: str = Query(None)):
+    """
+        Builds the equal-weighted index between the given start and end dates.
+
+        For each day in the range:
+        - Selects the top 100 stocks by market capitalization.
+        - Assigns each a fixed weight of 1% (equal weighting).
+        - Stores the index composition and calculates index returns.
+        - Index performance (daily and cumulative return) is calculated and stored.
+        - Redis is used to cache performance and daily compositions.
+
+        Args:
+            start_date (str): (format: YYYY-MM-DD).
+            end_date (str): (format: YYYY-MM-DD).
+
+        Returns:
+            dict: A success message including the date range processed.
+    """
+
     end_date = end_date or start_date
     con = duckdb.connect(DB_PATH)
 

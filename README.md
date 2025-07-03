@@ -97,15 +97,15 @@ Access API at: http://localhost:8000/docs
 | cumulative\_return | DOUBLE    |
 
 ### :: Suggestions for Production ::
-    1. Use a real-time data source like IEX Cloud or Polygon for accurate market caps
-
-    2. Run ingestion as a scheduled background job (e.g. Airflow or Celery or even cron job)
-
-    3. Secure API with Auth
-
-    4. Add rate limiting and pagination
-
-    5. Move to PostgreSQL + Redis cluster in production
+        1. Use a real-time data source like IEX Cloud or Polygon for accurate market caps
+        
+        2. Run ingestion as a scheduled background job (e.g. Airflow or Celery or even cron job)
+        
+        3. Secure API with Auth  (OAuth2, API tokens, or JWT implementation)
+        
+        4. Add rate limiting and pagination (use tenacity for retry policy and make it fault tolerant and use slowapi to limit requests per minute by user (remote address implementation))    
+        
+        5. Move to PostgreSQL + Redis cluster in production
 
 ## Author 
 ###  Shubham Rekkawar

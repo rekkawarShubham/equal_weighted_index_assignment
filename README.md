@@ -62,3 +62,51 @@ Access API at: http://localhost:8000/docs
     API : /export-data
     POST /export-data?start_date=2024-05-01&end_date=2024-06-01
     Returns .xlsx file with:
+
+## 🗄️ Database Schema (DuckDB)
+### Table : daily_stock_data
+
+| Column Name | Data Type |
+|-------------|-----------|
+| trade_date  | DATE      |
+| ticker      | VARCHAR   |
+| open_price  | DOUBLE    |
+| high_price  | DOUBLE    |
+| low_price   | DOUBLE    |
+| close_price | DOUBLE    |
+| volume      | BIGINT    |
+| market_cap  | DOUBLE    |
+
+
+### Table : index_composition
+
+| Column Name    | Data Type |
+|----------------|-----------|
+| index_date     | DATE      |
+| ticker         | TEXT      |
+| weight         | DOUBLE    |
+| notional_value | DOUBLE    |
+
+
+### Table : index_performance
+
+| Column Name        | Data Type |
+| ------------------ |-----------|
+| index\_date        | DATE      |
+| daily\_return      | DOUBLE    |
+| cumulative\_return | DOUBLE    |
+
+### :: Suggestions for Production ::
+    1. Use a real-time data source like IEX Cloud or Polygon for accurate market caps
+
+    2. Run ingestion as a scheduled background job (e.g. Airflow or Celery or even cron job)
+
+    3. Secure API with Auth
+
+    4. Add rate limiting and pagination
+
+    5. Move to PostgreSQL + Redis cluster in production
+
+## Author 
+###  Shubham Rekkawar
+[GitHub Profile](https://github.com/rekkawarShubham)

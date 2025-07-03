@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 import time
 from typing import List, Optional
 
-# Load environment variables (ensure .env exists in project root if used)
+# Load environment variables
 load_dotenv()
 
 # Add the parent directory to the system path to import modules from 'app'
@@ -43,7 +43,6 @@ def fetch_daily_ohlcv_and_market_cap(
         if df_pandas is None or df_pandas.empty:
             return None
 
-        # --- CRITICAL FIX: Handle potential MultiIndex columns from yfinance ---
         # This ensures column names are flattened to simple strings before processing
         if isinstance(df_pandas.columns, pd.MultiIndex):
             # Assuming the structure is (Metric, TickerSymbol)
@@ -53,7 +52,6 @@ def fetch_daily_ohlcv_and_market_cap(
             # both become 'Close' if the original MultiIndex only had 'Close' as level 0),
             # this removes the duplicates, keeping the first.
             df_pandas = df_pandas.loc[:, ~df_pandas.columns.duplicated()]
-        # --- End CRITICAL FIX ---
 
         # Step 2: Perform initial transformations using Pandas
         df_pandas = df_pandas.rename(columns={

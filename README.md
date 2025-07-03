@@ -47,7 +47,7 @@ Access API at: http://localhost:8000/docs
     RUN : python data/data_ingestion_job.py
 
 ## Build Index
-    POST /build-index?start_date=2024-05-01&end_date=2024-06-01
+    POST /build-index?start_date=2025-05-15&end_date=2025-07-02
 
 ## API Usage
     API : /index-performance

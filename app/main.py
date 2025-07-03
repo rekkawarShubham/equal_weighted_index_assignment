@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api import index_builder,index_retrieval,index_export_data
+from app.api import index_builder,index_retrieval,index_export_data
 
 app = FastAPI(title="Equal Weighted Index API")
 app.include_router(index_builder.router)

@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 router = APIRouter()
-DB_PATH = "services/data/index_data.duckdb"
+DB_PATH = "data/index_data.duckdb"
 r = Redis(host=os.getenv("REDIS_HOST", "localhost"), port=int(os.getenv("REDIS_PORT", 6379)))
 
 @router.get("/index-performance")

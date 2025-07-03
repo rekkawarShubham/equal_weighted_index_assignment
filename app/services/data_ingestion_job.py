@@ -1,20 +1,19 @@
 import os
 import sys
-import duckdb
 import polars as pl
 import pandas as pd
 from datetime import date, timedelta
 import yfinance as yf
 from dotenv import load_dotenv
 import time
-from typing import List, Optional
+from typing import Optional
 
 # Load environment variables
 load_dotenv()
 
 # Add the parent directory to the system path to import modules from 'app'
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from services.database import get_db_connection, initialize_db
+from app.model.database import get_db_connection, initialize_db
 
 # --- Configuration & Ticker List ---
 # TICKERS_TO_INGEST = [

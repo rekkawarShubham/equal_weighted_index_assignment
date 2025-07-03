@@ -6,7 +6,7 @@ from tempfile import NamedTemporaryFile
 from datetime import datetime
 
 router = APIRouter()
-DB_PATH = "services/data/index_data.duckdb"
+DB_PATH = "data/index_data.duckdb"
 
 @router.post("/export-data")
 def export_data(start_date: str = Query(...), end_date: str = Query(...)):

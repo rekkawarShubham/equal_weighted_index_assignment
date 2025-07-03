@@ -1,7 +1,7 @@
 import duckdb
 import os
 
-DATABASE_FILE = os.getenv("DUCKDB_PATH", "./data/index_data.duckdb")
+DATABASE_FILE = os.getenv("DUCKDB_PATH", "../../data/index_data.duckdb")
 
 def get_db_connection():
     """Establishes and returns a DuckDB connection."""

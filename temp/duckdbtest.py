@@ -1,6 +1,6 @@
 import duckdb
 import pandas as pd
-con = duckdb.connect("/Users/shubhamrekkawar/stock_market_analysis/data/data/index_data.duckdb")
+con = duckdb.connect("/Users/shubhamrekkawar/stock_market_analysis/services/services/index_data.duckdb")
 print(con.execute("SELECT * FROM daily_stock_data LIMIT 5").fetchdf())
 # # print(con.execute("SELECT * FROM index_composition").fetchdf())
 # # print(con.execute("SELECT * FROM index_performance LIMIT 5").fetchdf())

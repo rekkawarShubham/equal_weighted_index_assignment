@@ -5,7 +5,7 @@ import pandas as pd
 from redis import Redis
 
 router = APIRouter()
-DB_PATH = "data/data/index_data.duckdb"
+DB_PATH = "services/services/index_data.duckdb"
 r = Redis(host="redis", port=6379)
 
 @router.post("/build-index")
@@ -20,7 +20,7 @@ def build_index(start_date: str = Query(...), end_date: str = Query(None)):
     print(len(df))
     print(df.columns)
     if df.empty:
-        return {"message": "No stock data found for the given dates"}
+        return {"message": "No stock services found for the given dates"}
 
     index_perf = []
     compositions = []
@@ -50,11 +50,11 @@ def build_index(start_date: str = Query(...), end_date: str = Query(None)):
     con.register("comp_view", compositions_df)
     con.register("perf_view", perf_df)
 
-    # Clear old data
+    # Clear old services
     con.execute("DELETE FROM index_composition WHERE date BETWEEN ? AND ?", [start_date, end_date])
     con.execute("DELETE FROM index_performance WHERE index_date BETWEEN ? AND ?", [start_date, end_date])
 
-    # Insert new data
+    # Insert new services
     con.execute("INSERT INTO index_composition SELECT * FROM comp_view")
     con.execute("INSERT INTO index_performance SELECT index_date, daily_return, cumulative_return FROM perf_view")
 

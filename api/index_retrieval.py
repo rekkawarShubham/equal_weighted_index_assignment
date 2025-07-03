@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 router = APIRouter()
-DB_PATH = "data/data/index_data.duckdb"
+DB_PATH = "services/services/index_data.duckdb"
 r = Redis(host=os.getenv("REDIS_HOST", "localhost"), port=int(os.getenv("REDIS_PORT", 6379)))
 
 @router.get("/index-performance")
@@ -19,7 +19,7 @@ def get_index_performance(start_date: str = Query(...), end_date: str = Query(..
     if cached:
         return {
             "source": "redis",
-            "data": pd.read_json(cached.decode("utf-8")).to_dict(orient="records")
+            "services": pd.read_json(cached.decode("utf-8")).to_dict(orient="records")
         }
 
     con = duckdb.connect(DB_PATH)
@@ -30,10 +30,10 @@ def get_index_performance(start_date: str = Query(...), end_date: str = Query(..
     """).fetchdf()
 
     if df.empty:
-        return {"message": "No index data found for given date range"}
+        return {"message": "No index services found for given date range"}
 
     r.set(cache_key, df.to_json(orient="records"))
-    return {"source": "db", "data": df.to_dict(orient="records")}
+    return {"source": "db", "services": df.to_dict(orient="records")}
 
 @router.get("/index-composition")
 def get_index_composition(date: str = Query(...)):
@@ -43,7 +43,7 @@ def get_index_composition(date: str = Query(...)):
     if cached:
         return {
             "source": "redis",
-            "data": pd.read_json(cached.decode("utf-8")).to_dict(orient="records")
+            "services": pd.read_json(cached.decode("utf-8")).to_dict(orient="records")
         }
 
     con = duckdb.connect(DB_PATH)
@@ -55,13 +55,13 @@ def get_index_composition(date: str = Query(...)):
     """).fetchdf()
 
     if df.empty:
-        return {"message": f"No composition data found for {date}"}
+        return {"message": f"No composition services found for {date}"}
 
     # Cache and return , also we can set expiry here if needed , ex =3600 (1hour)
     r.set(cache_key, df.to_json(orient="records"))
     return {
         "source": "db",
-        "data": df.to_dict(orient="records")
+        "services": df.to_dict(orient="records")
     }
 
 @router.get("/composition-changes")
@@ -79,7 +79,7 @@ def get_composition_changes(start_date: str = Query(...), end_date: str = Query(
     con.close()
 
     if df.empty:
-        return {"message": "No data in range"}
+        return {"message": "No services in range"}
 
     # Group tickers by date
     grouped = df.groupby("date")["ticker"].apply(set).sort_index()

@@ -6,27 +6,27 @@ from tempfile import NamedTemporaryFile
 from datetime import datetime
 
 router = APIRouter()
-DB_PATH = "data/data/index_data.duckdb"
+DB_PATH = "services/services/index_data.duckdb"
 
 @router.post("/export-data")
 def export_data(start_date: str = Query(...), end_date: str = Query(...)):
     con = duckdb.connect(DB_PATH)
 
-    # Get Index Performance data from index_performance table
+    # Get Index Performance services from index_performance table
     perf_df = con.execute(f"""
         SELECT * FROM index_performance
         WHERE index_date BETWEEN '{start_date}' AND '{end_date}'
         ORDER BY index_date
     """).fetchdf()
 
-    # Get Index Compositions data from index_composition table
+    # Get Index Compositions services from index_composition table
     comp_df = con.execute(f"""
         SELECT * FROM index_composition
         WHERE date BETWEEN '{start_date}' AND '{end_date}'
         ORDER BY date, ticker
     """).fetchdf()
 
-    # Get Composition Changes data by grouping ticker per date
+    # Get Composition Changes services by grouping ticker per date
     raw_comp = comp_df.groupby("date")["ticker"].apply(set).sort_index()
     prev_day = None
     changes = []

@@ -4,6 +4,7 @@ import duckdb
 import pandas as pd
 import os
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -66,6 +67,12 @@ def get_index_composition(date: str = Query(...)):
 
 @router.get("/composition-changes")
 def get_composition_changes(start_date: str = Query(...), end_date: str = Query(...)):
+    # Cached the composition changes for given date range
+    cache_key = f"composition_changes:{start_date}:{end_date}"
+    cached = r.get(cache_key)
+    if cached:
+        return {"source": "redis", "changes": json.loads(cached)}
+
     con = duckdb.connect(DB_PATH)
 
     # Load all compositions in date range
@@ -106,4 +113,5 @@ def get_composition_changes(start_date: str = Query(...), end_date: str = Query(
 
         prev_tickers = curr_tickers
 
-    return {"changes": changes}
+    r.set(cache_key, json.dumps(changes))
+    return {"source": "db" , "changes": changes}
